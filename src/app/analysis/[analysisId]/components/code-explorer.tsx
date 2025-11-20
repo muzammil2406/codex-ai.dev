@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, type ReactNode } from 'react';
+import { useState, useMemo, type ReactNode } from 'react';
 import type { FileNode } from '@/lib/mock-data';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Folder, File as FileIcon, ChevronRight, ChevronDown, Wand2, Loader2 } from 'lucide-react';
@@ -10,6 +10,8 @@ import { getCodeExplanation } from '@/app/actions';
 import { useToast } from '@/hooks/use-toast';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Skeleton } from '@/components/ui/skeleton';
+import { cn } from '@/lib/utils';
+import { buttonVariants } from '@/components/ui/button';
 
 interface FileTreeItemProps {
   node: FileNode;
@@ -56,19 +58,21 @@ interface CodeExplorerProps {
   fileTree: FileNode;
 }
 
-export default function CodeExplorer({ fileTree }: CodeExplorerProps) {
-  const findInitialFile = (node: FileNode): FileNode | null => {
-    if (node.type === 'file') return node;
-    if (node.children) {
-      for (const child of node.children) {
-        const file = findInitialFile(child);
-        if (file) return file;
-      }
+const findInitialFile = (node: FileNode): FileNode | null => {
+  if (node.type === 'file') return node;
+  if (node.children) {
+    for (const child of node.children) {
+      const file = findInitialFile(child);
+      if (file) return file;
     }
-    return null;
-  };
+  }
+  return null;
+};
 
-  const [selectedFile, setSelectedFile] = useState<FileNode | null>(findInitialFile(fileTree));
+export default function CodeExplorer({ fileTree }: CodeExplorerProps) {
+  const initialFile = useMemo(() => findInitialFile(fileTree), [fileTree]);
+
+  const [selectedFile, setSelectedFile] = useState<FileNode | null>(initialFile);
   const [explanation, setExplanation] = useState('');
   const [isExplaining, setIsExplaining] = useState(false);
   const { toast } = useToast();
@@ -120,14 +124,19 @@ export default function CodeExplorer({ fileTree }: CodeExplorerProps) {
             <div className="mt-4">
               <Accordion type="single" collapsible>
                 <AccordionItem value="item-1">
-                  <AccordionTrigger asChild>
-                    <Button onClick={handleExplainCode} disabled={isExplaining} variant="outline">
-                      {isExplaining ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Wand2 className="mr-2 h-4 w-4" />}
-                      {isExplaining ? 'Thinking...' : 'Explain this Code'}
-                    </Button>
+                   <AccordionTrigger
+                      onClick={(e) => {
+                        if (isExplaining) e.preventDefault();
+                        if (!explanation) handleExplainCode();
+                      }}
+                      disabled={isExplaining}
+                      className={cn(buttonVariants({ variant: 'outline' }), 'no-underline hover:no-underline w-fit gap-2')}
+                    >
+                      {isExplaining ? <Loader2 className="animate-spin" /> : <Wand2 />}
+                      {isExplaining ? 'Thinking...' : explanation ? 'Explanation' : 'Explain this Code'}
                   </AccordionTrigger>
                   <AccordionContent className="pt-4">
-                    {isExplaining && (
+                    {isExplaining && !explanation && (
                       <div className="space-y-2">
                         <Skeleton className="h-4 w-full" />
                         <Skeleton className="h-4 w-full" />

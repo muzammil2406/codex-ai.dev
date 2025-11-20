@@ -9,6 +9,7 @@ import CodeExplorer from "./code-explorer";
 import DependencyGraph from "./dependency-graph";
 import TechDebt from "./tech-debt";
 import DeadCode from "./dead-code";
+import GitHistory from "./git-history";
 
 interface AnalysisDashboardProps {
   analysisResult: AnalysisResult;
@@ -30,6 +31,8 @@ export default function AnalysisDashboard({ analysisResult, repoMetadata }: Anal
         return <TechDebt metrics={analysisResult.techDebt} />;
       case 'dead-code':
         return <DeadCode items={analysisResult.deadCode} />;
+      case 'git-history':
+        return <GitHistory gitHistory={analysisResult.gitHistory} contributors={analysisResult.contributors} />;
       default: 
         return <CodeNarrative initialStory={analysisResult.story} repoUrl={repoMetadata.repoUrl} />;
     }
@@ -47,7 +50,7 @@ export default function AnalysisDashboard({ analysisResult, repoMetadata }: Anal
       <SidebarInset>
         <div className="flex h-screen flex-col">
             <Header />
-            <main className="flex-1 overflow-y-auto p-4 md:p-6 lg:p-8">
+            <main id="analysis-content" className="flex-1 overflow-y-auto p-4 md:p-6 lg:p-8">
                 {renderContent()}
             </main>
         </div>

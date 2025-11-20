@@ -31,12 +31,31 @@ export interface DeadCodeItem {
   lines: string;
 }
 
+export interface GitHistoryPoint {
+  month: string;
+  commits: number;
+  locAdded: number;
+  locDeleted: number;
+  activeContributors: number;
+}
+
+export interface Contributor {
+  name: string;
+  avatarUrl: string;
+  commits: number;
+  locAdded: number;
+  locDeleted: number;
+  filesTouched: number;
+}
+
 export interface AnalysisResult {
   story: string;
   fileTree: FileNode;
   techDebt: TechDebtMetrics;
   deadCode: DeadCodeItem[];
   dependencies: { name: string, version: string, type: 'direct' | 'indirect' }[];
+  gitHistory: GitHistoryPoint[];
+  contributors: Contributor[];
 }
 
 export const repoMetadata: RepoMetadata = {
@@ -200,5 +219,26 @@ export function useEffect(create, deps) {
     { name: 'scheduler', version: '0.23.0', type: 'direct' },
     { name: 'loose-envify', version: '1.4.0', type: 'direct' },
     { name: 'object-assign', version: '4.1.1', type: 'indirect' },
+  ],
+  gitHistory: [
+    { month: 'Jan 2023', commits: 120, locAdded: 15000, locDeleted: 4000, activeContributors: 25 },
+    { month: 'Feb 2023', commits: 135, locAdded: 18000, locDeleted: 5500, activeContributors: 28 },
+    { month: 'Mar 2023', commits: 150, locAdded: 22000, locDeleted: 7000, activeContributors: 32 },
+    { month: 'Apr 2023', commits: 110, locAdded: 13000, locDeleted: 3000, activeContributors: 26 },
+    { month: 'May 2023', commits: 160, locAdded: 25000, locDeleted: 8000, activeContributors: 35 },
+    { month: 'Jun 2023', commits: 140, locAdded: 19000, locDeleted: 6000, activeContributors: 30 },
+    { month: 'Jul 2023', commits: 175, locAdded: 28000, locDeleted: 9500, activeContributors: 38 },
+    { month: 'Aug 2023', commits: 130, locAdded: 17000, locDeleted: 5000, activeContributors: 29 },
+    { month: 'Sep 2023', commits: 155, locAdded: 23000, locDeleted: 7500, activeContributors: 33 },
+    { month: 'Oct 2023', commits: 165, locAdded: 26000, locDeleted: 8500, activeContributors: 36 },
+    { month: 'Nov 2023', commits: 180, locAdded: 30000, locDeleted: 10000, activeContributors: 40 },
+    { month: 'Dec 2023', commits: 190, locAdded: 32000, locDeleted: 11000, activeContributors: 42 },
+  ],
+  contributors: [
+    { name: 'Dan Abramov', avatarUrl: 'https://picsum.photos/seed/dan/48/48', commits: 1250, locAdded: 350000, locDeleted: 120000, filesTouched: 800 },
+    { name: 'Andrew Clark', avatarUrl: 'https://picsum.photos/seed/andrew/48/48', commits: 980, locAdded: 280000, locDeleted: 95000, filesTouched: 650 },
+    { name: 'Sophie Alpert', avatarUrl: 'https://picsum.photos/seed/sophie/48/48', commits: 750, locAdded: 190000, locDeleted: 70000, filesTouched: 500 },
+    { name: 'Sebastian Markbåge', avatarUrl: 'https://picsum.photos/seed/sebastian/48/48', commits: 1500, locAdded: 450000, locDeleted: 180000, filesTouched: 1100 },
+    { name: 'Brian Vaughn', avatarUrl: 'https://picsum.photos/seed/brian/48/48', commits: 600, locAdded: 150000, locDeleted: 50000, filesTouched: 400 },
   ]
 };

@@ -1,4 +1,5 @@
 'use client';
+import { useRouter } from "next/navigation";
 import {
   SidebarHeader,
   SidebarMenu,
@@ -7,7 +8,8 @@ import {
   SidebarFooter,
   SidebarContent
 } from "@/components/ui/sidebar";
-import { Github, BookText, Code, GitMerge, ShieldAlert, Trash2, Settings, User } from "lucide-react";
+import { Github, BookText, Code, GitMerge, ShieldAlert, Trash2, Settings, User, GitCommit } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
 interface AnalysisSidebarProps {
   repoName: string;
@@ -16,12 +18,15 @@ interface AnalysisSidebarProps {
 }
 
 export default function AnalysisSidebar({ repoName, activeView, setActiveView }: AnalysisSidebarProps) {
+  const router = useRouter();
+
   const menuItems = [
     { id: 'story', label: 'Code Narrative', icon: BookText },
     { id: 'dependencies', label: 'Dependencies', icon: GitMerge },
     { id: 'explorer', label: 'Code Explorer', icon: Code },
     { id: 'tech-debt', label: 'Tech Debt', icon: ShieldAlert },
     { id: 'dead-code', label: 'Dead Code', icon: Trash2 },
+    { id: 'git-history', label: 'Git History', icon: GitCommit },
   ];
 
   return (
@@ -57,13 +62,13 @@ export default function AnalysisSidebar({ repoName, activeView, setActiveView }:
       <SidebarFooter>
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton tooltip="Settings">
+            <SidebarMenuButton tooltip="Settings" onClick={() => router.push('/settings')}>
               <Settings className="h-5 w-5" />
               <span>Settings</span>
             </SidebarMenuButton>
           </SidebarMenuItem>
           <SidebarMenuItem>
-            <SidebarMenuButton tooltip="Account">
+            <SidebarMenuButton tooltip="Account" onClick={() => router.push('/account')}>
                 <User className="h-5 w-5" />
                 <span>My Account</span>
             </SidebarMenuButton>
