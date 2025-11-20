@@ -2,12 +2,17 @@ import { analysisResult, repoMetadata } from "@/lib/mock-data";
 import AnalysisDashboard from "./components/analysis-dashboard";
 
 export default async function AnalysisPage({ params }: { params: { analysisId: string } }) {
-  // In a real app, you'd fetch this data based on params.analysisId
 
-  // Forcing a delay to simulate data fetching
-  await new Promise(resolve => setTimeout(resolve, 500));
+  // allow any dynamic route, including "mock-analysis"
+  const { analysisId } = params;
+
+  // (Optional) You can use analysisId later to fetch real data
+  // For now we ignore it and use mock data
 
   return (
-    <AnalysisDashboard analysisResult={analysisResult} repoMetadata={repoMetadata} />
+    <AnalysisDashboard
+      analysisResult={analysisResult}
+      repoMetadata={repoMetadata}
+    />
   );
 }
